@@ -4,32 +4,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TikTok Health & Boost Engine</title>
+    <title>TikTok Algorithmic Guard - Unfreeze Tool</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --tt-pink: #ff0050;
+            --tt-cyan: #00f2ea;
+        }
         body {
             font-family: 'Inter', sans-serif;
             background-color: #020617;
             color: #f8fafc;
+            overflow-x: hidden;
         }
         .tiktok-gradient {
-            background: linear-gradient(90deg, #ff0050 0%, #00f2ea 100%);
+            background: linear-gradient(90deg, var(--tt-pink) 0%, var(--tt-cyan) 100%);
+        }
+        .text-gradient {
+            background: linear-gradient(90deg, var(--tt-pink) 0%, var(--tt-cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         .glass-panel {
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
         }
-        .glow-shadow {
-            box-shadow: 0 0 20px rgba(0, 242, 234, 0.15);
+        .glow-cyan {
+            box-shadow: 0 0 30px rgba(0, 242, 234, 0.15);
         }
-        @keyframes scan {
-            0% { transform: translateY(-100%); }
-            100% { transform: translateY(100%); }
+        .glow-pink {
+            box-shadow: 0 0 30px rgba(255, 0, 80, 0.15);
+        }
+        @keyframes scan-vertical {
+            0% { transform: translateY(-100%); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(100%); opacity: 0; }
         }
         .scan-line {
-            animation: scan 2s linear infinite;
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--tt-cyan), transparent);
+            animation: scan-vertical 2.5s ease-in-out infinite;
+            z-index: 10;
+        }
+        .mesh-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(255, 0, 80, 0.15) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, rgba(0, 242, 234, 0.15) 0, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(255, 0, 80, 0.1) 0, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(0, 242, 234, 0.1) 0, transparent 50%);
+        }
+        .terminal-text {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        @keyframes pulse-soft {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+        }
+        .pulse-soft {
+            animation: pulse-soft 2s infinite;
         }
     </style>
 <script type="importmap">
@@ -37,15 +80,20 @@
   "imports": {
     "react/": "https://esm.sh/react@^19.2.4/",
     "react": "https://esm.sh/react@^19.2.4",
+    "vite": "https://esm.sh/vite@^7.3.1",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.3",
     "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
     "@google/genai": "https://esm.sh/@google/genai@^1.40.0",
-    "recharts": "https://esm.sh/recharts@^3.7.0",
-    "lucide-react": "https://esm.sh/lucide-react@^0.563.0"
+    "lucide-react": "https://esm.sh/lucide-react@^0.563.0",
+    "recharts": "https://esm.sh/recharts@^3.7.0"
   }
 }
 </script>
 </head>
 <body>
+    <div class="mesh-gradient"></div>
     <div id="root"></div>
+    <!-- Vite Module Entry -->
+    <script type="module" src="/index.tsx"></script>
 </body>
 </html>

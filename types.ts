@@ -12,8 +12,11 @@ export interface TikTokProfile {
   engagementRate: number;
   followerGrowth: number;
   averageViews: number;
+  followers: number;
+  likes: number;
   riskLevel: 'Low' | 'Medium' | 'High' | 'Critical';
   analysisSummary: string;
+  timestamp: number;
 }
 
 export interface BoostStrategy {
@@ -26,7 +29,9 @@ export interface BoostStrategy {
 
 export interface AnalysisState {
   loading: boolean;
+  scanStep: string;
   profile: TikTokProfile | null;
   boost: BoostStrategy | null;
   error: string | null;
+  history: TikTokProfile[];
 }

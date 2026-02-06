@@ -8,8 +8,14 @@ export const analyzeTikTokID = async (username: string): Promise<TikTokProfile> 
   const response = await ai.models.generateContent({
     model: 'gemini-3-flash-preview',
     contents: `Analyze this TikTok username/profile ID: "${username}". 
-    Simulate a deep algorithmic scan of its engagement history, shadowban markers, and 'frozen' status. 
-    Provide a realistic-looking audit report. Return data in JSON format.`,
+    Simulate a deep algorithmic health audit.
+    Requirements:
+    - Status: Choose from [Healthy, Frozen, Warned, Shadowbanned].
+    - EngagementRate: Real-world percentage (0-100).
+    - RiskLevel: [Low, Medium, High, Critical].
+    - Stats: Generate realistic follower counts (10k-2M) and likes (100k-10M).
+    - Summary: A 10-15 word professional-sounding diagnosis.
+    Format: Strict JSON.`,
     config: {
       responseMimeType: "application/json",
       responseSchema: {
@@ -17,26 +23,32 @@ export const analyzeTikTokID = async (username: string): Promise<TikTokProfile> 
         properties: {
           username: { type: Type.STRING },
           status: { type: Type.STRING, enum: Object.values(AccountStatus) },
-          engagementRate: { type: Type.NUMBER, description: "Percentage from 0 to 100" },
-          followerGrowth: { type: Type.NUMBER, description: "Trend value" },
+          engagementRate: { type: Type.NUMBER },
+          followerGrowth: { type: Type.NUMBER },
           averageViews: { type: Type.NUMBER },
+          followers: { type: Type.NUMBER },
+          likes: { type: Type.NUMBER },
           riskLevel: { type: Type.STRING, enum: ['Low', 'Medium', 'High', 'Critical'] },
           analysisSummary: { type: Type.STRING }
         },
-        required: ["username", "status", "engagementRate", "riskLevel", "analysisSummary"]
+        required: ["username", "status", "engagementRate", "riskLevel", "analysisSummary", "followers", "likes"]
       }
     }
   });
 
-  return JSON.parse(response.text) as TikTokProfile;
+  return {
+    ...(JSON.parse(response.text) as TikTokProfile),
+    timestamp: Date.now()
+  };
 };
 
 export const getUnfreezeStrategy = async (profile: TikTokProfile): Promise<BoostStrategy> => {
   const response = await ai.models.generateContent({
     model: 'gemini-3-flash-preview',
-    contents: `The TikTok account @${profile.username} is currently marked as "${profile.status}" with a "${profile.riskLevel}" risk level. 
-    Generate a 100% real, actionable "UNFREEZE" and account boost strategy. 
-    Include specific steps to bypass algorithmic suppression, high-engagement hashtags, and content pillars.`,
+    contents: `CRITICAL: TikTok ID @${profile.username} is flagged as "${profile.status}". 
+    Generate a professional "Algorithmic Unfreeze Blueprint". 
+    Include 3 technical steps for metadata correction, 5 high-impact hashtags for the current algorithm, 3 specific content pillars to reset engagement, and best posting times.
+    Focus on high-growth strategy. Format: Strict JSON.`,
     config: {
       responseMimeType: "application/json",
       responseSchema: {
